@@ -38,6 +38,7 @@ namespace ROS2Sensors
         ////////////////////////////////////////////////////////////////////////
         // ROS2SensorsEditorRequestBus interface implementation
         AZ::Component* CreateROS2GnssSensorComponent(AZ::Entity& entity, const ROS2::SensorConfiguration& sensorConfiguration) override;
+        AZ::Component* CreateROS2GpsOrientedSensorComponent(AZ::Entity& entity, const ROS2::SensorConfiguration& sensorConfiguration) override;
         AZ::Component* CreateROS2CameraSensorComponent(
             AZ::Entity& entity,
             const ROS2::SensorConfiguration& sensorConfiguration,

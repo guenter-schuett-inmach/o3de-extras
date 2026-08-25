@@ -12,6 +12,7 @@
 
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
+#include <GPSOriented/ROS2GPSOrientedSensorComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
@@ -84,6 +85,12 @@ namespace ROS2Sensors
         AZ::Entity& entity, const ROS2::SensorConfiguration& sensorConfiguration)
     {
         return CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration);
+    };
+
+    AZ::Component* ROS2SensorsEditorSystemComponent::CreateROS2GpsOrientedSensorComponent(
+        AZ::Entity& entity, const ROS2::SensorConfiguration& sensorConfiguration)
+    {
+        return CreateComponent<ROS2GPSOrientedSensorComponent>(entity, sensorConfiguration);
     };
 
     AZ::Component* ROS2SensorsEditorSystemComponent::CreateROS2CameraSensorComponent(

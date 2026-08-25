@@ -16,6 +16,7 @@
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <Camera/ROS2CameraSystemComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
+#include <GPSOriented/ROS2GPSOrientedSensorComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
 #include <Lidar/ClassSegmentationConfigurationComponent.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
@@ -45,6 +46,7 @@ namespace ROS2Sensors
                 ROS2ContactSensorComponent::CreateDescriptor(),
 #endif
                 ROS2GNSSSensorComponent::CreateDescriptor(),
+                ROS2GPSOrientedSensorComponent::CreateDescriptor(),
                 ROS2ImuSensorComponent::CreateDescriptor(),
                 ROS2LidarSensorComponent::CreateDescriptor(),
                 ROS2Lidar2DSensorComponent::CreateDescriptor(),

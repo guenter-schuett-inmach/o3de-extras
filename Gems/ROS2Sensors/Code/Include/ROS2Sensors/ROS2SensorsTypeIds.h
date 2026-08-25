@@ -49,6 +49,7 @@ namespace ROS2Sensors
     inline constexpr const char* ROS2CameraSensorEditorComponentTypeId = "{3C2A86B2-AD58-4BF1-A5EF-71E0F94A2B42}";
     inline constexpr const char* ROS2ContactSensorComponentTypeId = "{91272E66-C9F1-4AA2-A9D5-98EAA4EF4E9A}";
     inline constexpr const char* ROS2GNSSSensorComponentTypeId = "{55B4A299-7FA3-496A-88F0-764C75B0E9A7}";
+    inline constexpr const char* ROS2GPSOrientedSensorComponentTypeId = "{63F87D1F-0AFF-4AA7-9434-CEE2DA23180E}";
     inline constexpr const char* ROS2ImuSensorComponentTypeId = "{502A955E-7742-4E23-AD77-5E4063739DCA}";
     inline constexpr const char* ROS2LidarSensorComponentTypeId = "{502A955F-7742-4E23-AD77-5E4063739DCA}";
     inline constexpr const char* ROS2Lidar2DSensorComponentTypeId = "{F4C2D970-1D69-40F2-9D4D-B52DCFDD2704}";

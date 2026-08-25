@@ -33,6 +33,8 @@ set(FILES
     Source/Camera/ROS2CameraSystemComponent.h
     Source/GNSS/ROS2GNSSSensorComponent.cpp
     Source/GNSS/ROS2GNSSSensorComponent.h
+    Source/GPSOriented/ROS2GPSOrientedSensorComponent.cpp
+    Source/GPSOriented/ROS2GPSOrientedSensorComponent.h
     Source/Imu/ImuSensorConfiguration.cpp
     Source/Imu/ROS2ImuSensorComponent.cpp
     Source/Imu/ROS2ImuSensorComponent.h
