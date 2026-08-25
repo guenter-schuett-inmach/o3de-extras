@@ -13,7 +13,7 @@
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <rclcpp/publisher.hpp>
-#include <sensor_msgs/msg/nav_sat_fix.hpp>
+#include <gps_msgs/msg/gps_fix.hpp>
 
 namespace ROS2Sensors
 {
@@ -47,8 +47,8 @@ namespace ROS2Sensors
         //! @return Current entity position.
         [[nodiscard]] AZ::Transform GetCurrentPose() const;
 
-        std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::NavSatFix>> m_gnssPublisher;
-        sensor_msgs::msg::NavSatFix m_gnssMsg;
+        std::shared_ptr<rclcpp::Publisher<gps_msgs::msg::GPSFix>> m_gpsOrientedPublisher;
+        gps_msgs::msg::GPSFix m_gpsOrientedMsg;
     };
 
 } // namespace ROS2Sensors

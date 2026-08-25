@@ -12,7 +12,7 @@
 #include <AzCore/EBus/EBusSharedDispatchTraits.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/string/string.h>
-#include <sensor_msgs/msg/nav_sat_fix.hpp>
+#include <gps_msgs/msg/gps_fix.hpp>
 
 namespace ROS2Sensors
 {
@@ -22,7 +22,7 @@ namespace ROS2Sensors
     //! Do not use connects / disconnects to this bus during event dispatch, as they are not allowed for this concurrency model.
     //! Those constraints allow for processing multiple GNSS frames at the same time.
     //! Bus implementations should allow for asynchronous execution of provided functions.
-    class GPSOrientedPostProcessingRequests : public AZ::EBusSharedDispatchTraits<GNSSPostProcessingRequests>
+    class GPSOrientedPostProcessingRequests : public AZ::EBusSharedDispatchTraits<GPSOrientedPostProcessingRequests>
     {
     public:
         using BusIdType = AZ::EntityId;
@@ -40,7 +40,7 @@ namespace ROS2Sensors
 
         //! Apply post-processing function to GNSS data.
         //! @param gnss standard GNSS message passed as a reference. It will be changed through post-processing.
-        virtual void ApplyPostProcessing(sensor_msgs::msg::NavSatFix& gnss) = 0;
+        virtual void ApplyPostProcessing(gps_msgs::msg::GPSFix& gnss) = 0;
 
         //! Get priority of the post-processing bus.
         //! @return priority of the bus.
