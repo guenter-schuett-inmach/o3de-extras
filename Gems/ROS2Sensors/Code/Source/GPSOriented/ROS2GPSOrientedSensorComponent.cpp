@@ -8,6 +8,9 @@
 
 #include "ROS2GPSOrientedSensorComponent.h"
 #include <AzCore/Math/Matrix4x4.h>
+
+#include <Source/RigidBodyComponent.h>
+
 #include <ROS2/ROS2NamesBus.h>
 
 #include <Georeferencing/GeoreferenceBus.h>
@@ -47,6 +50,7 @@ namespace ROS2Sensors
         pc.m_topic = "gnss_oriented";
         m_sensorConfiguration.m_frequency = 10;
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(GPSOrientedMsgType, pc));
+        m_levelRotation = AZ::Quaternion::CreateIdentity();
     }
 
     ROS2GPSOrientedSensorComponent::ROS2GPSOrientedSensorComponent(const ROS2::SensorConfiguration& sensorConfiguration)
@@ -69,6 +73,9 @@ namespace ROS2Sensors
         const auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(ros2Frame, "Invalid component pointer value");
         m_gpsOrientedMsg.header.frame_id = ros2Frame->GetNamespacedFrameID().data();
+
+        // get rotation of Level vs. ENU GNSS-Orientation
+        Georeferencing::GeoreferenceRequestsBus::BroadcastResult(m_levelRotation, &Georeferencing::GeoreferenceRequests::GetRotationFromLevelToENU);
 
         StartSensor(
             m_sensorConfiguration.m_frequency,
@@ -106,6 +113,28 @@ namespace ROS2Sensors
         m_gpsOrientedMsg.latitude = currentPositionWGS84.m_latitude;
         m_gpsOrientedMsg.longitude = currentPositionWGS84.m_longitude;
         m_gpsOrientedMsg.altitude = currentPositionWGS84.m_altitude;
+
+        AZ::Quaternion orientationENU = AZ::Quaternion::CreateIdentity ();
+        AzPhysics::RigidBody* rigidBody = nullptr;
+        AZ::EntityId entityId = GetEntityId();
+        // fetch current orientation relative to level
+        Physics::RigidBodyRequestBus::EventResult(rigidBody, entityId, &Physics::RigidBodyRequests::GetRigidBody);
+        if(rigidBody)
+        {
+            AZ::Quaternion orientationLevel = rigidBody->GetOrientation();
+            // determine current orientation relative to GNSS ENU coordinates
+            orientationENU = m_levelRotation * orientationLevel;
+        }
+
+        // get deviation angle towards east
+        AZ::Vector3 eulerAngles = orientationENU.GetEulerDegreesXYZ();
+        float dip = eulerAngles.GetZ();
+        // map angle according Sepentrio GNSS: 2. quadrant is [-270°..-180°]
+        if(90.0 < dip)
+        {
+            dip -= 360.0;
+        }
+        m_gpsOrientedMsg.dip = dip;
 
         m_gpsOrientedMsg.status.status = gps_msgs::msg::GPSStatus::STATUS_SBAS_FIX;
         GPSOrientedPostProcessingRequestBus::Event(GetEntityId(), &GPSOrientedPostProcessingRequests::ApplyPostProcessing, m_gpsOrientedMsg);

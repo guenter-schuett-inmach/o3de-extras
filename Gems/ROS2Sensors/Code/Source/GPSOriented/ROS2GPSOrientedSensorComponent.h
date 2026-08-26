@@ -49,6 +49,8 @@ namespace ROS2Sensors
 
         std::shared_ptr<rclcpp::Publisher<gps_msgs::msg::GPSFix>> m_gpsOrientedPublisher;
         gps_msgs::msg::GPSFix m_gpsOrientedMsg;
+
+        AZ::Quaternion m_levelRotation;
     };
 
 } // namespace ROS2Sensors
