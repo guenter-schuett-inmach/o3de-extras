@@ -21,7 +21,7 @@ namespace ROS2Sensors
 {
     namespace
     {
-        const char* GPSOrientedMsgType = "sensor_msgs::msg::NavSatFix";
+        const char* GPSOrientedMsgType = "gps_msgs::msg::GPSFix";
     }
 
     void ROS2GPSOrientedSensorComponent::Reflect(AZ::ReflectContext* context)
