@@ -18,8 +18,9 @@
 namespace ROS2Sensors
 {
     //! Global Navigation Satellite Systems (GNSS) sensor component class
-    //! It provides NavSatFix data of sensor's position in GNSS frame which is defined by GNSS origin offset
+    //! It provides GPSFix data of sensor's position and orientation in GNSS frame which is defined by GNSS origin offset
     //! Offset is provided as latitude [deg], longitude [deg], altitude [m] of o3de global frame
+    //! Orientation is provided as dip angle [°]
     //! It is assumed that o3de global frame overlaps with ENU coordinate system
     class ROS2GPSOrientedSensorComponent : public ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>
     {
