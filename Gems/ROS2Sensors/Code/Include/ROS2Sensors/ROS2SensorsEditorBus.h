@@ -36,7 +36,13 @@ namespace ROS2Sensors
         //! @return A pointer to the newly created AZ::Component representing the GNSS sensor (or nullptr if failed).
         virtual AZ::Component* CreateROS2GnssSensorComponent(AZ::Entity& entity, const ROS2::SensorConfiguration& sensorConfiguration) = 0;
 
-        //! Create a new ROS2 GPS Oriented sensor component.
+        //! Create a new ROS2 GNSS Orientation sensor component.
+        //! @param entity The entity to which the sensor component will be added.
+        //! @param sensorConfiguration The general configuration for the sensor.
+        //! @return A pointer to the newly created AZ::Component representing the GNSS sensor (or nullptr if failed).
+        virtual AZ::Component* CreateROS2GNSSOrientationSensorComponent(AZ::Entity& entity, const ROS2::SensorConfiguration& sensorConfiguration) = 0;
+
+       //! Create a new ROS2 GPS Oriented sensor component.
         //! @param entity The entity to which the sensor component will be added.
         //! @param sensorConfiguration The general configuration for the sensor.
         //! @return A pointer to the newly created AZ::Component representing the GNSS sensor (or nullptr if failed).
