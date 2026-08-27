@@ -47,7 +47,7 @@ namespace ROS2Sensors
     {
         ROS2::TopicConfiguration pc;
         pc.m_type = GPSOrientedMsgType;
-        pc.m_topic = "gnss_oriented";
+        pc.m_topic = "gps_oriented";
         m_sensorConfiguration.m_frequency = 10;
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(GPSOrientedMsgType, pc));
         m_levelRotation = AZ::Quaternion::CreateIdentity();
