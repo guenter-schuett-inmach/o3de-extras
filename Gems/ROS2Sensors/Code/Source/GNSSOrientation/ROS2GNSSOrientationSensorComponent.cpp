@@ -99,25 +99,33 @@ namespace ROS2Sensors
 
     void ROS2GNSSOrientationSensorComponent::FrequencyTick()
     {
-        AZ::Quaternion orientationENU = AZ::Quaternion::CreateIdentity ();
         AzPhysics::RigidBody* rigidBody = nullptr;
         AZ::EntityId entityId = GetEntityId();
         // fetch current orientation relative to level
         Physics::RigidBodyRequestBus::EventResult(rigidBody, entityId, &Physics::RigidBodyRequests::GetRigidBody);
-        if(rigidBody)
+        if (!rigidBody)
         {
-            AZ::Quaternion orientationLevel = rigidBody->GetOrientation();
-            // determine current orientation relative to GNSS ENU coordinates
-            orientationENU = m_levelRotation * orientationLevel;
+            AZ_Error(
+                "ROS2GNSSOrientationSensorComponent",
+                false,
+                "Entity %s does not have a rigid body - stopping GNSS sensor.",
+                entityId.ToString().c_str());
+            StopSensor();
         }
+        else
+        {
+            const AZ::Quaternion orientationLevel = rigidBody->GetOrientation();
+            // determine current orientation relative to GNSS ENU coordinates
+            const AZ::Quaternion orientationENU = m_levelRotation * orientationLevel;
 
-        m_GNSSOrientationMsg.quaternion.x = orientationENU.GetX();
-        m_GNSSOrientationMsg.quaternion.y = orientationENU.GetY();
-        m_GNSSOrientationMsg.quaternion.z = orientationENU.GetZ();
-        m_GNSSOrientationMsg.quaternion.w = orientationENU.GetW();
+            m_GNSSOrientationMsg.quaternion.x = orientationENU.GetX();
+            m_GNSSOrientationMsg.quaternion.y = orientationENU.GetY();
+            m_GNSSOrientationMsg.quaternion.z = orientationENU.GetZ();
+            m_GNSSOrientationMsg.quaternion.w = orientationENU.GetW();
 
-        m_GNSSOrientationMsg.header.stamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
-        m_GNSSOrientationPublisher->publish(m_GNSSOrientationMsg);
+            m_GNSSOrientationMsg.header.stamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
+            m_GNSSOrientationPublisher->publish(m_GNSSOrientationMsg);
+        }
     }
 
 } // namespace ROS2Sensors

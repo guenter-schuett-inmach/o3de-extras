@@ -28,7 +28,7 @@ namespace ROS2Sensors
     {
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2GPSOrientedSensorComponent, SensorBaseType>()->Version(4);
+            serialize->Class<ROS2GPSOrientedSensorComponent, SensorBaseType>()->Version(1);
 
             if (auto* editContext = serialize->GetEditContext())
             {
@@ -114,20 +114,30 @@ namespace ROS2Sensors
         m_gpsOrientedMsg.longitude = currentPositionWGS84.m_longitude;
         m_gpsOrientedMsg.altitude = currentPositionWGS84.m_altitude;
 
-        AZ::Quaternion orientationENU = AZ::Quaternion::CreateIdentity ();
+        AZ::Vector3 eulerAngles(0.0);
         AzPhysics::RigidBody* rigidBody = nullptr;
         AZ::EntityId entityId = GetEntityId();
         // fetch current orientation relative to level
         Physics::RigidBodyRequestBus::EventResult(rigidBody, entityId, &Physics::RigidBodyRequests::GetRigidBody);
-        if(rigidBody)
+        if (!rigidBody)
         {
-            AZ::Quaternion orientationLevel = rigidBody->GetOrientation();
+            AZ_Error(
+                "ROS2GPSOrientedSensorComponent",
+                false,
+                "Entity %s does not have a rigid body - stopping GPS sensor.",
+                entityId.ToString().c_str());
+            StopSensor();
+            return;
+        }
+        else
+        {
+            const AZ::Quaternion orientationLevel = rigidBody->GetOrientation();
             // determine current orientation relative to GNSS ENU coordinates
-            orientationENU = m_levelRotation * orientationLevel;
+            const AZ::Quaternion orientationENU = m_levelRotation * orientationLevel;
+            eulerAngles = orientationENU.GetEulerDegreesXYZ();
         }
 
         // get deviation angle towards east
-        AZ::Vector3 eulerAngles = orientationENU.GetEulerDegreesXYZ();
         float dip = eulerAngles.GetZ();
         // map angle according Sepentrio GNSS: 2. quadrant is [-270°..-180°]
         if(90.0 < dip)
